@@ -1,0 +1,48 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs/api",
+  "theme": "default",
+  "name": "AI CLI - Local AI-Powered Coding Agent",
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeExternals": true,
+  "includeVersion": true,
+  "excludeNotDocumented": false,
+  "readme": "README.md",
+  "categorizeByGroup": true,
+  "categoryOrder": [
+    "Core",
+    "Configuration",
+    "LLM",
+    "Agent",
+    "Tools",
+    "UI",
+    "Commands"
+  ],
+  "sort": ["source-order"],
+  "kindSortOrder": [
+    "Project",
+    "Module",
+    "Namespace",
+    "Enum",
+    "Class",
+    "Interface",
+    "TypeAlias",
+    "Constructor",
+    "Property",
+    "Method",
+    "Function",
+    "Accessor",
+    "Variable"
+  ],
+  "navigationLinks": {
+    "GitHub": "https://github.com/yourusername/ai-cli",
+    "Documentation": "https://yourusername.github.io/ai-cli"
+  },
+  "sidebarLinks": {
+    "Quick Start": "https://github.com/yourusername/ai-cli/blob/main/QUICK_START.md",
+    "Examples": "https://github.com/yourusername/ai-cli/blob/main/docs/EXAMPLES.md"
+  },
+  "searchInComments": true,
+  "searchInDocuments": true
+} 
