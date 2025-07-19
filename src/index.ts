@@ -6,6 +6,7 @@ import { AgentLoop } from './agent/AgentLoop';
 import { ChatMode } from './ui/ChatMode';
 import { InitCommand } from './commands/InitCommand';
 import { ConfigCommand } from './commands/ConfigCommand';
+import { OllamaCommand } from './commands/OllamaCommand';
 
 const program = new Command();
 
@@ -65,6 +66,20 @@ program
   .action(async (options) => {
     const configCmd = new ConfigCommand();
     await configCmd.run(options);
+  });
+
+// Ollama command
+program
+  .command('ollama')
+  .description('Manage Ollama models')
+  .option('--setup', 'Quick setup with Mistral 7B (recommended)')
+  .option('--available', 'Show available models')
+  .option('--list', 'List installed models')
+  .option('--pull <model>', 'Download a specific model')
+  .option('--serve', 'Start Ollama server')
+  .action(async (options) => {
+    const ollamaCmd = new OllamaCommand();
+    await ollamaCmd.run(options);
   });
 
 program.parse(); 

@@ -178,20 +178,36 @@ cd ~/my-project
 npx ts-node ../Simpleton-CLI/src/index.ts init
 ```
 
+### Quick Model Setup with Ollama
+
+```bash
+# Install Ollama (if not already installed)
+# Visit: https://ollama.com/
+
+# Quick setup - Downloads Mistral 7B and configures everything
+node dist/index.js ollama --setup
+
+# Or browse available models first
+node dist/index.js ollama --available
+
+# Or use the launcher menu (Option 8: Ollama Models)
+./launch-ai-cli.bat
+```
+
 ### Start Coding with AI!
 
 ```bash
 # Ask the AI to help with your code
-npx ts-node ../Simpleton-CLI/src/index.ts "refactor this authentication to use JWT"
+node dist/index.js "refactor this authentication to use JWT"
 
 # Start interactive chat mode
-npx ts-node ../Simpleton-CLI/src/index.ts chat
+node dist/index.js chat
 
 # Get suggestions only (no changes applied)
-npx ts-node ../Simpleton-CLI/src/index.ts --suggest "add error handling to this function"
+node dist/index.js --suggest "add error handling to this function"
 
 # Auto-apply changes
-npx ts-node ../Simpleton-CLI/src/index.ts --auto-edit "fix the linting issues"
+node dist/index.js --auto-edit "fix the linting issues"
 ```
 
 ## 📋 Usage Examples
@@ -200,30 +216,35 @@ npx ts-node ../Simpleton-CLI/src/index.ts --auto-edit "fix the linting issues"
 
 ```bash
 # Help with a specific task
-npx ts-node src/index.ts "create a React component for user profile"
+node dist/index.js "create a React component for user profile"
 
 # Interactive chat mode
-npx ts-node src/index.ts chat
+node dist/index.js chat
 
 # Initialize project context
-npx ts-node src/index.ts init
+node dist/index.js init
 
 # Manage configuration
-npx ts-node src/index.ts config --list
-npx ts-node src/index.ts config --set model llama3:8b
+node dist/index.js config --list
+node dist/index.js config --set model mistral:7b
+
+# Manage Ollama models
+node dist/index.js ollama --setup        # Quick setup with Mistral 7B
+node dist/index.js ollama --available    # Show available models
+node dist/index.js ollama --list         # List installed models
 ```
 
 ### Advanced Usage
 
 ```bash
 # Suggest mode - see what the AI would change
-npx ts-node src/index.ts --suggest "optimize this database query"
+node dist/index.js --suggest "optimize this database query"
 
 # Auto-edit mode - apply changes with confirmation
-npx ts-node src/index.ts --auto-edit "add TypeScript types to this file"
+node dist/index.js --auto-edit "add TypeScript types to this file"
 
 # Full-auto mode - apply all changes automatically (use with caution)
-npx ts-node src/index.ts --full-auto "run the test suite and fix any failures"
+node dist/index.js --full-auto "run the test suite and fix any failures"
 ```
 
 ## 🏗️ Architecture
@@ -282,22 +303,27 @@ npx ts-node src/index.ts config --get endpoint
 
 | Model | Size | RAM Needed | Speed | Best For |
 |-------|------|------------|-------|----------|
-| `deepseek-coder:1.3b-q4_K_M` | 0.8GB | ~1.1GB | 15-25 t/s | 8GB RAM systems |
-| `deepseek-coder:6.7b-q4_K_M` | 3.7GB | ~4.3GB | 6-10 t/s | 16GB+ RAM systems |
-| `codellama:3b-q4_K_M` | 1.9GB | ~2.4GB | 12-18 t/s | General coding |
-| `tinyllama:1.1b-q4_K_M` | 0.7GB | ~1GB | 25-35 t/s | Fast responses |
+| `mistral:7b` ⭐ | 4.1GB | ~8GB | 8-15 t/s | **Recommended** - Excellent coding & general use |
+| `deepseek-coder:1.3b-q4_K_M` | 0.8GB | ~2GB | 15-25 t/s | Lightweight systems |
+| `deepseek-coder:6.7b-q4_K_M` | 3.7GB | ~8GB | 6-10 t/s | High-quality coding |
+| `codellama:7b-q4_K_M` | 3.8GB | ~8GB | 8-12 t/s | Meta's specialized code model |
+| `codegemma:2b-q4_K_M` | 1.6GB | ~4GB | 12-18 t/s | Google's lightweight coding |
 
 ### Setting up with Ollama
 
 ```bash
+# Quick setup (recommended) - downloads Mistral 7B and configures everything
+node dist/index.js ollama --setup
+
+# Or manually:
 # Pull a model
-ollama pull deepseek-coder:1.3b-q4_K_M
+ollama pull mistral:7b
 
 # Test the model
-ollama run deepseek-coder:1.3b-q4_K_M "Write a Python function"
+ollama run mistral:7b "Write a Python function"
 
 # Configure the CLI to use it
-npx ts-node src/index.ts config --set model deepseek-coder:1.3b-q4_K_M
+node dist/index.js config --set model mistral:7b
 ```
 
 ## 🛡️ Security & Privacy

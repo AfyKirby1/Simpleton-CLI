@@ -64,10 +64,11 @@ echo 4. Auto-Edit Mode (With confirmation)
 echo 5. Full Auto Mode (Dangerous!)
 echo 6. Configuration
 echo 7. Initialize Project
-echo 8. Help
-echo 9. Exit
+echo 8. Ollama Models (Download/Manage AI models)
+echo 9. Help
+echo 10. Exit
 echo.
-set /p choice="Enter your choice (1-9): "
+set /p choice="Enter your choice (1-10): "
 
 if "%choice%"=="1" goto chat
 if "%choice%"=="2" goto quick
@@ -76,8 +77,9 @@ if "%choice%"=="4" goto autoedit
 if "%choice%"=="5" goto fullauto
 if "%choice%"=="6" goto config
 if "%choice%"=="7" goto init
-if "%choice%"=="8" goto help
-if "%choice%"=="9" goto exit
+if "%choice%"=="8" goto ollama
+if "%choice%"=="9" goto help
+if "%choice%"=="10" goto exit
 goto menu
 
 :chat
@@ -141,6 +143,80 @@ node dist\index.js --full-auto "%prompt%"
 echo.
 pause
 goto menu
+
+:ollama
+echo.
+echo ========================================
+echo         Ollama Model Management
+echo ========================================
+echo.
+echo Choose an option:
+echo.
+echo 1. Quick Setup (Download Mistral 7B - Recommended)
+echo 2. Show Available Models
+echo 3. List Installed Models  
+echo 4. Download Specific Model
+echo 5. Start Ollama Server
+echo 6. Back to Main Menu
+echo.
+set /p ollama_choice="Enter your choice (1-6): "
+
+if "%ollama_choice%"=="1" goto ollama_setup
+if "%ollama_choice%"=="2" goto ollama_available
+if "%ollama_choice%"=="3" goto ollama_list
+if "%ollama_choice%"=="4" goto ollama_pull
+if "%ollama_choice%"=="5" goto ollama_serve
+if "%ollama_choice%"=="6" goto menu
+goto ollama
+
+:ollama_setup
+echo.
+echo [INFO] Setting up Mistral 7B (recommended model)...
+echo This will download ~4.1GB and configure the CLI
+echo.
+node dist\index.js ollama --setup
+echo.
+pause
+goto ollama
+
+:ollama_available
+echo.
+echo [INFO] Showing available models...
+echo.
+node dist\index.js ollama --available
+echo.
+pause
+goto ollama
+
+:ollama_list
+echo.
+echo [INFO] Listing installed models...
+echo.
+node dist\index.js ollama --list
+echo.
+pause
+goto ollama
+
+:ollama_pull
+echo.
+set /p model="Enter model name (e.g., mistral:7b): "
+if "%model%"=="" goto ollama
+echo.
+echo [INFO] Downloading %model%...
+echo.
+node dist\index.js ollama --pull "%model%"
+echo.
+pause
+goto ollama
+
+:ollama_serve
+echo.
+echo [INFO] Starting Ollama server...
+echo.
+node dist\index.js ollama --serve
+echo.
+pause
+goto ollama
 
 :config
 echo.
@@ -224,7 +300,17 @@ echo - "Review this code for security issues"
 echo.
 echo Configuration:
 echo - Endpoint: Your local LLM server (default: Ollama)
-echo - Model: AI model to use (e.g., deepseek-coder:1.3b-q4_K_M)
+echo - Model: AI model to use (e.g., mistral:7b)
+echo.
+echo Ollama Models:
+echo - Quick Setup: Downloads and configures Mistral 7B
+echo - Available Models: Shows recommended coding models
+echo - Model Management: Download, list, and serve models
+echo.
+echo Recommended Models:
+echo - mistral:7b (4.1GB) - Excellent general purpose coding
+echo - deepseek-coder:1.3b-q4_K_M (0.8GB) - Fast and lightweight
+echo - codellama:7b-q4_K_M (3.8GB) - Meta's specialized code model
 echo.
 echo For more help, visit the documentation in the docs/ folder.
 echo.
