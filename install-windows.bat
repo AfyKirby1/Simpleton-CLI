@@ -6,6 +6,7 @@ echo ========================================
 echo   Simpleton CLI - Windows Installer
 echo ========================================
 echo.
+echo This window will stay open to show progress...
 
 :: Check if Node.js is installed
 echo [1/4] Checking Node.js installation...
@@ -25,6 +26,8 @@ if %errorlevel% neq 0 (
 ) else (
     for /f "tokens=*" %%i in ('node --version 2^>nul') do set NODE_VERSION=%%i
     echo [SUCCESS] Node.js found: !NODE_VERSION!
+    echo Continuing to next step...
+    timeout /t 1 >nul
 )
 
 :: Check if npm is installed
@@ -44,13 +47,17 @@ if %errorlevel% neq 0 (
 ) else (
     for /f "tokens=*" %%i in ('npm --version 2^>nul') do set NPM_VERSION=%%i
     echo [SUCCESS] npm found: !NPM_VERSION!
+    echo Ready to install dependencies...
+    timeout /t 1 >nul
 )
 
 :: Install dependencies
+echo.
 echo [3/4] Installing dependencies...
 echo Running: npm install
-echo This may take a few minutes...
-npm install --no-progress --loglevel=error
+echo This may take a few minutes, please wait...
+echo.
+npm install
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to install dependencies!
     echo.
@@ -62,13 +69,18 @@ if %errorlevel% neq 0 (
     pause
     exit /b 1
 ) else (
+    echo.
     echo [SUCCESS] Dependencies installed successfully!
+    echo Moving to build step...
+    timeout /t 1 >nul
 )
 
 :: Build the project
+echo.
 echo [4/4] Building the project...
 echo Running: npm run build
-npm run build --silent
+echo.
+npm run build
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to build the project!
     echo.
@@ -76,6 +88,7 @@ if %errorlevel% neq 0 (
     pause
     exit /b 1
 ) else (
+    echo.
     echo [SUCCESS] Project built successfully!
 )
 
@@ -90,4 +103,5 @@ echo    2. Or run: node dist/index.js --help
 echo.
 echo Need help? Check the README.md for detailed instructions.
 echo.
-pause 
+echo Press any key to close this window...
+pause >nul 

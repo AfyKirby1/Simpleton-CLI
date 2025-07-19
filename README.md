@@ -34,10 +34,15 @@ A **100% local** AI-powered coding agent CLI that runs entirely on your machine 
 git clone https://github.com/AfyKirby1/Simpleton-CLI.git
 cd Simpleton-CLI
 
-# Run the Windows installer script (recommended)
+# Choose one of these installer scripts:
+
+# Option 1: Full-featured installer (recommended)
 install-windows.bat
 
-# Or if you have issues, try the simple version:
+# Option 2: Verbose installer (shows detailed progress)
+install-windows-verbose.bat
+
+# Option 3: Simple installer (if others have issues)
 install-windows-simple.bat
 ```
 
@@ -389,8 +394,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Fix**: Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
 
 **❌ Windows installer script hangs or shows weird characters**
-- **Solution**: Use the simple installer instead
-- **Fix**: Run `install-windows-simple.bat` instead of `install-windows.bat`
+- **Solution**: Try a different installer script
+- **Fix**: Run `install-windows-verbose.bat` (shows detailed progress) or `install-windows-simple.bat` (minimal version)
 - **Alternative**: Copy and paste commands manually from the Quick Start guide
 
 ### Common Issues
