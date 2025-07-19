@@ -34,8 +34,11 @@ A **100% local** AI-powered coding agent CLI that runs entirely on your machine 
 git clone https://github.com/AfyKirby1/Simpleton-CLI.git
 cd Simpleton-CLI
 
-# Run the Windows installer script
+# Run the Windows installer script (recommended)
 install-windows.bat
+
+# Or if you have issues, try the simple version:
+install-windows-simple.bat
 ```
 
 #### For All Platforms
@@ -367,7 +370,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **❌ "'npm' is not recognized as an internal or external command"**
 - **Solution**: Node.js is not properly installed or not in PATH
 - **Fix**: Follow the [Windows Setup Guide](#-windows-setup-guide) above
-- **Quick Fix**: Use the `install-windows.bat` script included in this repo
+- **Quick Fix**: Use the `install-windows.bat` or `install-windows-simple.bat` script included in this repo
 
 **❌ "'node' is not recognized as an internal or external command"**
 - **Solution**: Same as npm issue - Node.js not in PATH
@@ -384,6 +387,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **❌ PowerShell execution policy errors**
 - **Solution**: Change execution policy
 - **Fix**: Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+
+**❌ Windows installer script hangs or shows weird characters**
+- **Solution**: Use the simple installer instead
+- **Fix**: Run `install-windows-simple.bat` instead of `install-windows.bat`
+- **Alternative**: Copy and paste commands manually from the Quick Start guide
 
 ### Common Issues
 
