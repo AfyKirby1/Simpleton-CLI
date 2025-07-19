@@ -241,6 +241,32 @@ Simpleton-CLI/
 4. **Documentation** - API documentation and examples
 5. **CI/CD Pipeline** - Automated testing and deployment
 
+## 🪟 Windows Support
+
+### ✅ Enhanced Windows Compatibility (Latest Update)
+
+1. **Windows Installation Guide**
+   - Comprehensive step-by-step Windows setup instructions
+   - Node.js PATH configuration guidance
+   - Troubleshooting for common Windows npm/Node.js issues
+
+2. **Windows Installer Script**
+   - `install-windows.bat` - Automated installation script for Windows
+   - Checks for Node.js and npm availability
+   - Provides clear error messages and guidance
+   - Handles common Windows installation issues
+
+3. **Windows-Specific Troubleshooting**
+   - Solutions for "'npm' is not recognized" errors
+   - Node.js PATH configuration fixes
+   - Permission issue resolutions
+   - PowerShell execution policy guidance
+
+4. **Easy Launcher Integration**
+   - Works seamlessly with existing `launch-ai-cli.bat` launcher
+   - Provides multiple installation methods for different user preferences
+   - Clear documentation for Windows users
+
 ## 🐛 Known Issues
 
 1. **TypeScript Errors**: Some linter errors due to missing type definitions

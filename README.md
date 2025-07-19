@@ -24,8 +24,21 @@ A **100% local** AI-powered coding agent CLI that runs entirely on your machine 
 - **Node.js 22+** - [Download here](https://nodejs.org/)
 - **Ollama** (optional) - [Install here](https://ollama.com/)
 
+> **⚠️ Windows Users**: If you get "'npm' is not recognized" error, see the [Windows Setup Guide](#-windows-setup-guide) below!
+
 ### Installation
 
+#### For Windows Users (Easy Way)
+```cmd
+# Clone the repository
+git clone https://github.com/AfyKirby1/Simpleton-CLI.git
+cd Simpleton-CLI
+
+# Run the Windows installer script
+install-windows.bat
+```
+
+#### For All Platforms
 ```bash
 # Clone the repository
 git clone https://github.com/AfyKirby1/Simpleton-CLI.git
@@ -40,6 +53,89 @@ npm run build
 # Link globally (optional)
 npm link
 ```
+
+## 🪟 Windows Setup Guide
+
+### Step 1: Install Node.js Properly
+
+1. **Download Node.js** from [nodejs.org](https://nodejs.org/) 
+2. **Choose the LTS version** (recommended for most users)
+3. **Run the installer** with these important options:
+   - ✅ **Check "Add to PATH"** during installation
+   - ✅ **Check "Automatically install necessary tools"**
+4. **Restart your command prompt/PowerShell** after installation
+
+### Step 2: Verify Installation
+
+Open a **new** Command Prompt or PowerShell window and run:
+
+```cmd
+node --version
+npm --version
+```
+
+You should see version numbers like:
+```
+v22.x.x
+10.x.x
+```
+
+### Step 3: Install the CLI
+
+```cmd
+# Clone the repository
+git clone https://github.com/AfyKirby1/Simpleton-CLI.git
+cd Simpleton-CLI
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+```
+
+### Step 4: Use the Easy Launcher
+
+For Windows users, we provide easy-to-use batch files:
+
+```cmd
+# Double-click this file in File Explorer:
+launch-ai-cli.bat
+
+# Or from command line:
+.\launch-ai-cli.bat
+```
+
+### Windows Troubleshooting
+
+**❌ "'npm' is not recognized as an internal or external command"**
+
+**Solution 1**: Reinstall Node.js
+1. Uninstall Node.js from Control Panel
+2. Download fresh installer from [nodejs.org](https://nodejs.org/)
+3. ✅ **Make sure to check "Add to PATH"** during installation
+4. Restart your computer
+5. Open new Command Prompt and try `npm --version`
+
+**Solution 2**: Manual PATH Fix
+1. Search for "Environment Variables" in Windows
+2. Click "Environment Variables" button
+3. In "System Variables", find and select "Path"
+4. Click "Edit" and add these paths:
+   - `C:\Program Files\nodejs\`
+   - `C:\Users\[YourUsername]\AppData\Roaming\npm`
+5. Click OK and restart Command Prompt
+
+**Solution 3**: Use Node.js Command Prompt
+1. Search for "Node.js Command Prompt" in Start Menu
+2. Run installation commands from there
+
+**❌ "Permission denied" or access errors**
+
+Run Command Prompt as Administrator:
+1. Right-click Command Prompt
+2. Select "Run as administrator"
+3. Try the installation again
 
 ### Setup Ollama (Recommended)
 
@@ -265,6 +361,29 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Uses OpenAI-compatible API for maximum compatibility
 
 ## 🆘 Troubleshooting
+
+### Windows-Specific Issues
+
+**❌ "'npm' is not recognized as an internal or external command"**
+- **Solution**: Node.js is not properly installed or not in PATH
+- **Fix**: Follow the [Windows Setup Guide](#-windows-setup-guide) above
+- **Quick Fix**: Use the `install-windows.bat` script included in this repo
+
+**❌ "'node' is not recognized as an internal or external command"**
+- **Solution**: Same as npm issue - Node.js not in PATH
+- **Fix**: Reinstall Node.js and check "Add to PATH" option
+
+**❌ "Permission denied" or "EPERM" errors**
+- **Solution**: Run Command Prompt as Administrator
+- **Alternative**: Install in a folder you have write access to
+
+**❌ "npm ERR! code EACCES"**
+- **Solution**: Permission issue with npm global folder
+- **Fix**: Run `npm install --no-optional` or use Administrator
+
+**❌ PowerShell execution policy errors**
+- **Solution**: Change execution policy
+- **Fix**: Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
 
 ### Common Issues
 
