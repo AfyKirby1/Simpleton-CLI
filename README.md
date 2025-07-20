@@ -223,10 +223,30 @@ node dist/index.js chat
 
 # Initialize project context
 node dist/index.js init
+```
 
+### Model Management
+
+```bash
+# Interactively switch models
+node dist/index.js model --switch
+
+# List available models with status
+node dist/index.js model --list
+
+# Set a model directly
+node dist/index.js model --set "deepseek-coder:6.7b"
+```
+
+### Configuration & Setup
+
+```bash
 # Manage configuration
 node dist/index.js config --list
 node dist/index.js config --set model mistral:7b
+
+# Run auto-setup for optimal configuration
+node dist/index.js setup
 
 # Manage Ollama models
 node dist/index.js ollama --setup        # Quick setup with Mistral 7B
@@ -234,17 +254,17 @@ node dist/index.js ollama --available    # Show available models
 node dist/index.js ollama --list         # List installed models
 ```
 
-### Advanced Usage
+### Terminal & Performance
 
 ```bash
-# Suggest mode - see what the AI would change
-node dist/index.js --suggest "optimize this database query"
+# Fix broken terminal colors
+node dist/index.js fix-terminal
 
-# Auto-edit mode - apply changes with confirmation
-node dist/index.js --auto-edit "add TypeScript types to this file"
+# View performance dashboard
+node dist/index.js performance
 
-# Full-auto mode - apply all changes automatically (use with caution)
-node dist/index.js --full-auto "run the test suite and fix any failures"
+# Run all performance benchmarks
+node dist/index.js perf --benchmark all
 ```
 
 ## 🏗️ Architecture

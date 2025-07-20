@@ -53,18 +53,20 @@ node dist/index.js --suggest "add error handling to this function"
 ## 🎯 Example Commands
 
 ```bash
-# Basic help
-node dist/index.js "create a React component for user profile"
-
-# Interactive mode
+# Interactive chat mode
 node dist/index.js chat
 
-# Project initialization
-node dist/index.js init
+# Get help with a specific task
+node dist/index.js "create a React component for user profile"
 
-# Configuration
-node dist/index.js config --list
-node dist/index.js config --set model deepseek-coder:6.7b-q4_K_M
+# Switch your AI model interactively
+node dist/index.js model --switch
+
+# Auto-setup and configure your CLI
+node dist/index.js setup
+
+# View performance and run benchmarks
+node dist/index.js performance
 ```
 
 ## 🔧 Available Modes
