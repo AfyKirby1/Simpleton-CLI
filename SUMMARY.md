@@ -14,31 +14,51 @@
    - LLM client with OpenAI-compatible API support
    - Agent loop for planning and executing coding tasks
 
-2. **File Operations**
-   - File manager for reading, writing, and listing project files
+2. **Performance Optimizations** 
+   - **NEW**: Comprehensive caching system with intelligent invalidation
+   - **NEW**: Parallel file processing and smart batching
+   - **NEW**: HTTP connection pooling and request optimization
+   - **NEW**: Performance monitoring and benchmarking tools
+   - **NEW**: Memory management and resource optimization
+
+3. **Auto-Detection & Setup**
+   - **NEW**: Automatic Ollama status detection and validation
+   - **NEW**: Model availability checking and recommendations
+   - **NEW**: Project auto-detection and initialization
+   - **NEW**: Configuration validation with actionable recommendations
+   - **NEW**: Auto-setup command for one-click configuration
+
+4. **File Operations**
+   - File manager with caching and parallel processing
    - Project context awareness with git integration
    - Beautiful diff rendering with colored output
    - Safe file operations with sandboxing
+   - **NEW**: Smart file content caching with auto-invalidation
+   - **NEW**: Parallel batch file reading and processing
 
-3. **Shell Operations**
+5. **Shell Operations**
    - Secure shell executor with command allow-listing
    - Protection against dangerous commands
    - Path safety checks and directory traversal prevention
    - Timeout and buffer limits for security
 
-4. **User Interface**
+6. **User Interface**
    - Interactive chat mode with REPL-style interface
    - Approval prompts for user confirmation
    - Streaming responses for real-time feedback
    - Beautiful terminal UI with emojis and colors
 
-5. **CLI Commands**
+7. **CLI Commands**
    - Main agent command with various modes (suggest, auto-edit, full-auto)
    - Interactive chat mode
    - Project initialization
-   - Configuration management
+   - Configuration management with auto-detection
+   - **NEW**: Auto-setup command for optimal configuration
+   - **NEW**: Performance monitoring and benchmarking command
+   - **NEW**: Interactive model switcher with easy switching
+   - **NEW**: Terminal color reset and diagnostic tools
 
-6. **Security & Privacy**
+7. **Security & Privacy**
    - 100% local execution - no data leaves the machine
    - Sandboxed file operations limited to project root
    - Safe command execution with allow-lists
@@ -85,7 +105,15 @@
 
 7. **CLI Commands**
    - **InitCommand** (`src/commands/InitCommand.ts`) - Project initialization
-   - **ConfigCommand** (`src/commands/ConfigCommand.ts`) - Configuration management
+   - **ConfigCommand** (`src/commands/ConfigCommand.ts`) - Configuration management with auto-detection
+   - **AutoSetupCommand** (`src/commands/AutoSetupCommand.ts`) - **NEW**: One-click optimal configuration
+   - **PerformanceCommand** (`src/commands/PerformanceCommand.ts`) - **NEW**: Performance monitoring and benchmarking
+   - **ModelCommand** (`src/commands/ModelCommand.ts`) - **NEW**: Interactive model switching and management
+
+8. **Performance Tools**
+   - **CacheManager** (`src/tools/CacheManager.ts`) - **NEW**: Intelligent caching with TTL and invalidation
+   - **PerformanceMonitor** (`src/tools/PerformanceMonitor.ts`) - **NEW**: Real-time performance tracking and analysis
+   - **TerminalUtils** (`src/tools/TerminalUtils.ts`) - **NEW**: Terminal color reset and diagnostic utilities
 
 ## 🔧 Technical Stack
 
@@ -115,15 +143,20 @@ ai-cli/
 │   ├── llm/
 │   │   └── LLMClient.ts       # LLM client integration
 │   ├── tools/
-│   │   ├── FileManager.ts     # File operations
-│   │   └── ShellExecutor.ts   # Shell operations
+│   │   ├── FileManager.ts     # File operations with caching
+│   │   ├── ShellExecutor.ts   # Shell operations
+│   │   ├── CacheManager.ts    # **NEW**: Intelligent caching system
+│   │   └── PerformanceMonitor.ts # **NEW**: Performance tracking
 │   ├── ui/
 │   │   ├── ChatMode.ts        # Interactive chat
 │   │   ├── DiffRenderer.ts    # Diff display
 │   │   └── ApprovalPrompt.ts  # User prompts
 │   └── commands/
 │       ├── InitCommand.ts     # Project init
-│       └── ConfigCommand.ts   # Config management
+│       ├── ConfigCommand.ts   # Config management with auto-detection
+│       ├── AutoSetupCommand.ts # **NEW**: Auto-setup and detection
+│       ├── PerformanceCommand.ts # **NEW**: Performance monitoring
+│       └── ModelCommand.ts    # **NEW**: Interactive model switching
 ├── package.json               # Dependencies and scripts
 ├── tsconfig.json              # TypeScript configuration
 └── README.md                  # Documentation
@@ -157,7 +190,7 @@ ai-cli --full-auto "run tests and fix failures"
 
 ### Configuration
 ```bash
-# List settings
+# List settings with auto-detection
 ai-cli config --list
 
 # Set endpoint
@@ -165,6 +198,38 @@ ai-cli config --set endpoint http://localhost:11434/v1
 
 # Set model
 ai-cli config --set model deepseek-coder:1.3b-q4_K_M
+```
+
+### Auto-Setup & Detection
+```bash
+# Quick auto-setup (recommended)
+ai-cli setup
+
+# Force auto-setup (download models, start services)
+ai-cli setup --force
+
+# Skip specific steps
+ai-cli setup --skip-ollama
+ai-cli setup --skip-project
+```
+
+### Performance Monitoring
+```bash
+# Show performance dashboard
+ai-cli performance
+ai-cli perf  # short alias
+
+# Run benchmarks
+ai-cli performance --benchmark all
+ai-cli performance --benchmark file-ops
+ai-cli performance --benchmark config
+ai-cli performance --benchmark ollama
+
+# Export metrics for analysis
+ai-cli performance --export metrics.json
+
+# Clear metrics and caches
+ai-cli performance --clear
 ```
 
 ## 🧠 LLM Integration

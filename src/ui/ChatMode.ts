@@ -10,16 +10,28 @@ export class ChatMode {
 
   constructor(config: ConfigManager) {
     this.config = config;
-    const endpoint = config.getEndpoint();
-    const model = config.getModel();
-    this.llmClient = new LLMClient(endpoint, model);
+    // We'll initialize the LLM client in start() after getting the effective model
+    this.llmClient = null as any;
     this.approvalPrompt = new ApprovalPrompt();
   }
 
   async start(): Promise<void> {
     console.log('💬 Starting interactive chat mode...');
+    
+    // Get the effective model (with fallback logic)
+    const endpoint = this.config.getEndpoint();
+    const effectiveModel = await this.config.getEffectiveModel();
+    const configuredModel = this.config.getConfiguredModel();
+    
+    // Initialize LLM client with effective model
+    this.llmClient = new LLMClient(endpoint, effectiveModel);
+    
     console.log(`🔗 Endpoint: ${this.llmClient.getEndpoint()}`);
-    console.log(`🧠 Model: ${this.llmClient.getModel()}`);
+    if (configuredModel !== effectiveModel) {
+      console.log(`🧠 Model: ${effectiveModel} (auto-fallback from ${configuredModel})`);
+    } else {
+      console.log(`🧠 Model: ${this.llmClient.getModel()}`);
+    }
     console.log('Type "exit" or "quit" to end the session');
     console.log('Type "clear" to clear conversation history');
     console.log('Type "help" for available commands');

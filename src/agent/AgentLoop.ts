@@ -27,10 +27,8 @@ export class AgentLoop {
     this.config = config;
     this.options = options;
     
-    const endpoint = options.endpoint || config.getEndpoint();
-    const model = options.model || config.getModel();
-    
-    this.llmClient = new LLMClient(endpoint, model);
+    // We'll initialize the LLM client in run() after getting the effective model
+    this.llmClient = null as any;
     this.fileManager = new FileManager();
     this.shellExecutor = new ShellExecutor();
     this.diffRenderer = new DiffRenderer();
@@ -42,8 +40,21 @@ export class AgentLoop {
     
     console.log(`🤖 AI CLI Agent starting...`);
     console.log(`📁 Project: ${path.basename(projectPath)}`);
+    
+    // Get the effective model (with fallback logic)
+    const endpoint = this.options.endpoint || this.config.getEndpoint();
+    const effectiveModel = this.options.model || await this.config.getEffectiveModel();
+    const configuredModel = this.config.getConfiguredModel();
+    
+    // Initialize LLM client with effective model
+    this.llmClient = new LLMClient(endpoint, effectiveModel);
+    
     console.log(`🔗 Endpoint: ${this.llmClient.getEndpoint()}`);
-    console.log(`🧠 Model: ${this.llmClient.getModel()}`);
+    if (!this.options.model && configuredModel !== effectiveModel) {
+      console.log(`🧠 Model: ${effectiveModel} (auto-fallback from ${configuredModel})`);
+    } else {
+      console.log(`🧠 Model: ${this.llmClient.getModel()}`);
+    }
     console.log(`💭 Task: ${prompt}`);
     console.log('');
 

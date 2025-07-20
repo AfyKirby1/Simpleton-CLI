@@ -1,4 +1,5 @@
 import { ConfigManager } from '../config/ConfigManager';
+import * as path from 'path';
 
 export interface ConfigOptions {
   set?: string;
@@ -62,7 +63,6 @@ export class ConfigCommand {
     
     const configKeys = [
       'endpoint',
-      'model',
       'autoApprove',
       'suggestOnly',
       'fullAuto'
@@ -73,18 +73,97 @@ export class ConfigCommand {
       console.log(`${key}: ${value}`);
     });
 
+    // Show model configuration separately with more detail
+    const configuredModel = this.config.getConfiguredModel();
+    const effectiveModel = await this.config.getEffectiveModel();
+    
+    if (configuredModel === effectiveModel) {
+      console.log(`model: ${configuredModel}`);
+    } else {
+      console.log(`model: ${configuredModel} (configured)`);
+      console.log(`      ${effectiveModel} (effective - auto-fallback)`);
+    }
+
     console.log('─'.repeat(40));
     
-    // Show project contexts
+    // Show Ollama status and model information
+    console.log('\n🤖 Ollama Status:');
+    const ollamaStatus = await this.config.checkOllamaStatus();
+    
+    if (ollamaStatus.isRunning) {
+      console.log('  ✅ Ollama is running');
+      
+      if (ollamaStatus.installedModels.length > 0) {
+        console.log('  📦 Installed Models:');
+        ollamaStatus.installedModels.forEach(model => {
+          const isCurrent = model === this.config.getModel();
+          const status = isCurrent ? ' (current)' : '';
+          console.log(`    ${isCurrent ? '🟢' : '⚪'} ${model}${status}`);
+        });
+      } else {
+        console.log('  ⚠️  No models installed');
+      }
+      
+      // Check if current model is available
+      const currentModel = this.config.getModel();
+      if (currentModel) {
+        if (ollamaStatus.installedModels.includes(currentModel)) {
+          console.log(`  ✅ Current model '${currentModel}' is available`);
+        } else {
+          console.log(`  ❌ Current model '${currentModel}' is NOT installed`);
+          const recommended = await this.config.getRecommendedModel();
+          if (recommended) {
+            console.log(`  💡 Recommended: Use '${recommended}' instead`);
+          }
+        }
+      }
+    } else {
+      console.log('  ❌ Ollama is not running');
+      console.log('  💡 Install Ollama from: https://ollama.ai/');
+    }
+    
+    // Show project contexts with auto-detection
+    console.log('\n📁 Project Detection:');
+    const currentProject = await this.config.autoDetectCurrentProject();
+    
+    if (currentProject) {
+      const projectName = path.basename(currentProject.projectPath);
+      console.log(`  🟢 Current directory: ${projectName}`);
+      console.log(`  📄 Files detected: ${currentProject.files.length}`);
+      console.log(`  🔄 Git status: ${currentProject.gitStatus === 'clean' ? 'clean' : 'modified'}`);
+    } else {
+      console.log('  ⚠️  Current directory does not appear to be a project');
+      console.log('  💡 Run "ai-cli init" to initialize this directory as a project');
+    }
+    
     const projects = this.config.listProjects();
     if (projects.length > 0) {
       console.log('\n📁 Known Projects:');
       projects.forEach(project => {
-        console.log(`  📂 ${project}`);
+        const isCurrent = currentProject && path.basename(currentProject.projectPath) === project;
+        const icon = isCurrent ? '🟢' : '📂';
+        console.log(`  ${icon} ${project}${isCurrent ? ' (current)' : ''}`);
       });
+    }
+    
+    // Show validation results
+    console.log('\n🔍 Configuration Validation:');
+    const validation = await this.config.validateCurrentConfiguration();
+    
+    if (validation.isValid) {
+      console.log('  ✅ Configuration is valid');
     } else {
-      console.log('\n📁 No projects initialized yet');
-      console.log('💡 Run "ai-cli init" in a project directory to get started');
+      console.log('  ❌ Issues found:');
+      validation.issues.forEach(issue => {
+        console.log(`    • ${issue}`);
+      });
+    }
+    
+    if (validation.recommendations.length > 0) {
+      console.log('\n💡 Recommendations:');
+      validation.recommendations.forEach(rec => {
+        console.log(`    • ${rec}`);
+      });
     }
   }
 
@@ -100,7 +179,7 @@ export class ConfigCommand {
     console.log('    Example: ai-cli config --get endpoint');
     console.log('');
     console.log('  ai-cli config --list');
-    console.log('    List all configuration values');
+    console.log('    List all configuration values with auto-detection');
     console.log('');
     console.log('📋 Available Configuration Keys:');
     console.log('  endpoint     - LLM API endpoint (default: http://localhost:11434/v1)');
