@@ -56,6 +56,7 @@
    - **NEW**: Auto-setup command for optimal configuration
    - **NEW**: Performance monitoring and benchmarking command
    - **NEW**: Interactive model switcher with easy switching
+   - **NEW**: Interactive Ollama model selection and download
    - **NEW**: Terminal color reset and diagnostic tools
 
 7. **Security & Privacy**
@@ -133,33 +134,50 @@
 ## 📁 Project Structure
 
 ```
-ai-cli/
-├── src/
-│   ├── index.ts              # Main CLI entry point
+Simpleton-CLI/
+├── README.md                     # Professional project overview
+├── LICENSE                       # MIT License
+├── docs/                         # All documentation
+│   ├── NAVIGATION.md             # Documentation guide
+│   ├── README.md                 # Complete project overview
+│   ├── QUICK_START.md            # 5-minute setup guide
+│   ├── EXAMPLES.md               # Usage examples
+│   ├── API.md                    # API reference
+│   ├── ARCHITECTURE.md           # System design
+│   ├── CONTRIBUTING.md           # Development guide
+│   ├── DEPLOYMENT.md             # Installation guide
+│   ├── SECURITY.md               # Security policies
+│   ├── CHANGELOG.md              # Version history
+│   ├── SUMMARY.md                # Project status (this file)
+│   └── index.md                  # Documentation index
+├── src/                          # Source code
+│   ├── index.ts                  # Main CLI entry point
 │   ├── config/
-│   │   └── ConfigManager.ts   # Configuration management
+│   │   └── ConfigManager.ts      # Configuration management
 │   ├── agent/
-│   │   └── AgentLoop.ts       # AI agent logic
+│   │   └── AgentLoop.ts          # AI agent logic
 │   ├── llm/
-│   │   └── LLMClient.ts       # LLM client integration
+│   │   └── LLMClient.ts          # LLM client integration
 │   ├── tools/
-│   │   ├── FileManager.ts     # File operations with caching
-│   │   ├── ShellExecutor.ts   # Shell operations
-│   │   ├── CacheManager.ts    # **NEW**: Intelligent caching system
-│   │   └── PerformanceMonitor.ts # **NEW**: Performance tracking
+│   │   ├── FileManager.ts        # File operations with caching
+│   │   ├── ShellExecutor.ts      # Shell operations
+│   │   ├── CacheManager.ts       # Intelligent caching system
+│   │   ├── PerformanceMonitor.ts # Performance tracking
+│   │   └── TerminalUtils.ts      # Terminal utilities
 │   ├── ui/
-│   │   ├── ChatMode.ts        # Interactive chat
-│   │   ├── DiffRenderer.ts    # Diff display
-│   │   └── ApprovalPrompt.ts  # User prompts
+│   │   ├── ChatMode.ts           # Interactive chat
+│   │   ├── DiffRenderer.ts       # Diff display
+│   │   └── ApprovalPrompt.ts     # User prompts
 │   └── commands/
-│       ├── InitCommand.ts     # Project init
-│       ├── ConfigCommand.ts   # Config management with auto-detection
-│       ├── AutoSetupCommand.ts # **NEW**: Auto-setup and detection
-│       ├── PerformanceCommand.ts # **NEW**: Performance monitoring
-│       └── ModelCommand.ts    # **NEW**: Interactive model switching
-├── package.json               # Dependencies and scripts
-├── tsconfig.json              # TypeScript configuration
-└── README.md                  # Documentation
+│       ├── InitCommand.ts        # Project init
+│       ├── ConfigCommand.ts      # Config management
+│       ├── AutoSetupCommand.ts   # Auto-setup and detection
+│       ├── PerformanceCommand.ts # Performance monitoring
+│       ├── ModelCommand.ts       # Interactive model switching
+│       └── OllamaCommand.ts      # Ollama integration
+├── package.json                  # Project configuration
+├── tsconfig.json                 # TypeScript configuration
+└── Various .bat/.ps1 files      # Windows installers
 ```
 
 ## 🚀 Usage Patterns
@@ -211,6 +229,21 @@ ai-cli setup --force
 # Skip specific steps
 ai-cli setup --skip-ollama
 ai-cli setup --skip-project
+```
+
+### Interactive Model Management
+```bash
+# Interactive model selection and download
+ai-cli ollama --select
+
+# Quick setup with recommended model
+ai-cli ollama --setup
+
+# Show available models
+ai-cli ollama --available
+
+# List installed models
+ai-cli ollama --list
 ```
 
 ### Performance Monitoring
@@ -286,9 +319,9 @@ Simpleton-CLI/
 ├── src/                          # TypeScript source code
 ├── README.md                     # Professional project overview
 ├── LICENSE                       # MIT License
-├── SECURITY.md                   # Security policy
-├── CHANGELOG.md                  # Version history
-├── SUMMARY.md                    # Project summary
+├── docs/SECURITY.md              # Security policy
+├── docs/CHANGELOG.md             # Version history
+├── docs/SUMMARY.md               # Project summary
 └── package.json                  # Project configuration
 ```
 
@@ -350,7 +383,7 @@ Simpleton-CLI/
 ## 📚 Documentation
 
 - **README.md** - Comprehensive setup and usage guide
-- **SUMMARY.md** - This project summary document
+- **docs/SUMMARY.md** - This project summary document
 - **Inline Comments** - Code documentation throughout
 - **Type Definitions** - TypeScript interfaces and types
 
@@ -367,3 +400,11 @@ Simpleton-CLI/
 
 **Last Updated**: December 2024
 **Status**: ✅ Core functionality complete, ready for testing and refinement 
+
+## July 25, 2024
+
+- Added `build.bat` to automate project setup and compilation on Windows. The script installs npm dependencies and runs the TypeScript compiler, addressing the initial setup difficulty for new contributors.
+
+- Fixed a startup hang caused by an indefinite timeout in the `testConnection` method. Implemented a 5-second timeout with a `CancelToken` to ensure the application remains responsive even if the Ollama server is unreachable.
+
+- Resolved launcher hanging issue by creating a lightweight configuration display. The launcher now uses a simplified config command that avoids potentially slow operations like Ollama status checks and project detection, ensuring the menu appears quickly. 

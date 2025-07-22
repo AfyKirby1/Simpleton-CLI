@@ -34,12 +34,8 @@ export class CacheManager {
     this.defaultTTL = options.defaultTTL || 30 * 60 * 1000; // 30 minutes default
     this.persistentCachePath = path.join(os.homedir(), '.ai-cli', 'cache');
     
-    if (options.enablePersistent) {
-      this.loadPersistentCache();
-    }
-
-    // Cleanup expired entries every 5 minutes
-    setInterval(() => this.cleanup(), 5 * 60 * 1000);
+    // Note: Persistent cache loading is now done on-demand to avoid blocking constructor
+    // and setInterval is removed to prevent hanging CLI commands
   }
 
   /**

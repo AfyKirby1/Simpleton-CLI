@@ -46,7 +46,7 @@ if not exist "dist\index.js" (
 
 :: Show current configuration with auto-detection
 echo [INFO] Current Configuration:
-node dist\index.js config --list 2>nul
+node dist\index.js config 2>nul
 echo.
 
 :: Main menu
@@ -162,19 +162,21 @@ echo Choose an option:
 echo.
 echo 1. Quick Setup (Download Mistral 7B - Recommended)
 echo 2. Show Available Models
-echo 3. List Installed Models  
-echo 4. Download Specific Model
-echo 5. Start Ollama Server
-echo 6. Back to Main Menu
+echo 3. Interactive Model Selection & Download
+echo 4. List Installed Models  
+echo 5. Download Specific Model
+echo 6. Start Ollama Server
+echo 7. Back to Main Menu
 echo.
-set /p ollama_choice="Enter your choice (1-6): "
+set /p ollama_choice="Enter your choice (1-7): "
 
 if "%ollama_choice%"=="1" goto ollama_setup
 if "%ollama_choice%"=="2" goto ollama_available
-if "%ollama_choice%"=="3" goto ollama_list
-if "%ollama_choice%"=="4" goto ollama_pull
-if "%ollama_choice%"=="5" goto ollama_serve
-if "%ollama_choice%"=="6" goto menu
+if "%ollama_choice%"=="3" goto ollama_select
+if "%ollama_choice%"=="4" goto ollama_list
+if "%ollama_choice%"=="5" goto ollama_pull
+if "%ollama_choice%"=="6" goto ollama_serve
+if "%ollama_choice%"=="7" goto menu
 goto ollama
 
 :ollama_setup
@@ -192,6 +194,16 @@ echo.
 echo [INFO] Showing available models...
 echo.
 node dist\index.js ollama --available
+echo.
+pause
+goto ollama
+
+:ollama_select
+echo.
+echo [INFO] Interactive model selection and download...
+echo Choose from our curated list of recommended models!
+echo.
+node dist\index.js ollama --select
 echo.
 pause
 goto ollama
@@ -544,6 +556,7 @@ echo - Model: AI model to use (e.g., mistral:7b)
 echo.
 echo Ollama Models:
 echo - Quick Setup: Downloads and configures Mistral 7B
+echo - Interactive Selection: Choose and download from curated model list
 echo - Available Models: Shows recommended coding models
 echo - Model Management: Download, list, and serve models
 echo.

@@ -1,11 +1,13 @@
 import { ConfigManager } from '../config/ConfigManager';
 import { LLMClient, ChatMessage } from '../llm/LLMClient';
 import { ApprovalPrompt } from './ApprovalPrompt';
+import { ConnectionTester } from './ConnectionTester';
 
 export class ChatMode {
   private config: ConfigManager;
   private llmClient: LLMClient;
   private approvalPrompt: ApprovalPrompt;
+  private connectionTester: ConnectionTester;
   private conversationHistory: ChatMessage[] = [];
 
   constructor(config: ConfigManager) {
@@ -13,6 +15,7 @@ export class ChatMode {
     // We'll initialize the LLM client in start() after getting the effective model
     this.llmClient = null as any;
     this.approvalPrompt = new ApprovalPrompt();
+    this.connectionTester = new ConnectionTester();
   }
 
   async start(): Promise<void> {
@@ -37,9 +40,10 @@ export class ChatMode {
     console.log('Type "help" for available commands');
     console.log('─'.repeat(50));
 
-    // Test connection
-    if (!(await this.llmClient.testConnection())) {
-      console.error('❌ Failed to connect to LLM endpoint. Please check if Ollama is running.');
+    // Test connection with loading animation and timeout handling
+    const connectionSuccess = await this.connectionTester.testConnectionWithFeedback(this.llmClient, 15000);
+    if (!connectionSuccess) {
+      this.connectionTester.close();
       return;
     }
 

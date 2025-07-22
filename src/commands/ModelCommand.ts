@@ -1,5 +1,6 @@
 import { ConfigManager } from '../config/ConfigManager';
 import { ApprovalPrompt } from '../ui/ApprovalPrompt';
+import { LoadingSpinner } from '../ui/LoadingSpinner';
 import chalk from 'chalk';
 
 export interface ModelOptions {

@@ -5,7 +5,7 @@ Welcome to the comprehensive documentation for **AI CLI** - your local AI-powere
 ## 🚀 Quick Navigation
 
 ### 🎯 **Getting Started**
-- **[Quick Start Guide](../QUICK_START.md)** - Get running in 5 minutes
+- **[Quick Start Guide](QUICK_START.md)** - Get running in 5 minutes
 - **[README](../README.md)** - Project overview and basic setup
 - **[Installation](#installation)** - Detailed installation instructions
 
@@ -21,8 +21,8 @@ Welcome to the comprehensive documentation for **AI CLI** - your local AI-powere
 - **[Deployment Guide](DEPLOYMENT.md)** - Distribution and deployment
 
 ### 📋 **Project Information**
-- **[Changelog](../CHANGELOG.md)** - Version history and changes
-- **[Project Summary](../SUMMARY.md)** - Current status and progress
+- **[Changelog](CHANGELOG.md)** - Version history and changes
+- **[Project Summary](SUMMARY.md)** - Current status and progress
 - **[Security Policy](#security)** - Security guidelines and reporting
 
 ---
@@ -99,7 +99,7 @@ node dist/index.js --suggest "Refactor this function for better performance"
 
 | Document | Description | Audience |
 |----------|-------------|----------|
-| **[Quick Start](../QUICK_START.md)** | 5-minute setup guide | New users |
+| **[Quick Start](QUICK_START.md)** | 5-minute setup guide | New users |
 | **[Examples](EXAMPLES.md)** | Comprehensive usage examples | All users |
 | **[README](../README.md)** | Project overview and features | All users |
 
@@ -116,8 +116,8 @@ node dist/index.js --suggest "Refactor this function for better performance"
 
 | Document | Description | Audience |
 |----------|-------------|----------|
-| **[Changelog](../CHANGELOG.md)** | Version history | All users |
-| **[Summary](../SUMMARY.md)** | Project status | Stakeholders |
+| **[Changelog](CHANGELOG.md)** | Version history | All users |
+| **[Summary](SUMMARY.md)** | Project status | Stakeholders |
 
 ---
 

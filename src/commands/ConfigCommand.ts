@@ -14,7 +14,7 @@ export class ConfigCommand {
     this.config = new ConfigManager();
   }
 
-  async run(options: ConfigOptions): Promise<void> {
+  async run(options: ConfigOptions = {}): Promise<void> {
     if (options.set) {
       await this.setConfig(options.set);
     } else if (options.get) {
@@ -22,7 +22,8 @@ export class ConfigCommand {
     } else if (options.list) {
       await this.listConfig();
     } else {
-      await this.showHelp();
+      // Default behavior - show basic config only
+      this.showBasicConfigSync();
     }
   }
 
@@ -55,6 +56,27 @@ export class ConfigCommand {
     } catch (error) {
       console.error(`❌ Failed to get config: ${error}`);
     }
+  }
+
+  private showBasicConfigSync(): void {
+    console.log('⚙️  Current Configuration:');
+    console.log(`  endpoint: ${this.config.getEndpoint()}`);
+    console.log(`  autoApprove: ${this.config.getAutoApprove()}`);
+    console.log(`  suggestOnly: ${this.config.getSuggestOnly()}`);
+    console.log(`  fullAuto: ${this.config.getFullAuto()}`);
+    console.log(`  model: ${this.config.getConfiguredModel()} (configured)`);
+  }
+
+  private async showBasicConfig(): Promise<void> {
+    console.log('⚙️  Current Configuration:');
+    console.log(`  endpoint: ${this.config.getEndpoint()}`);
+    console.log(`  autoApprove: ${this.config.getAutoApprove()}`);
+    console.log(`  suggestOnly: ${this.config.getSuggestOnly()}`);
+    console.log(`  fullAuto: ${this.config.getFullAuto()}`);
+    
+    // Show model configuration without any external calls
+    const configuredModel = this.config.getConfiguredModel();
+    console.log(`  model: ${configuredModel} (configured)`);
   }
 
   private async listConfig(): Promise<void> {

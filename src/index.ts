@@ -103,6 +103,7 @@ program
   .description('Manage Ollama models')
   .option('--setup', 'Quick setup with Mistral 7B (recommended)')
   .option('--available', 'Show available models')
+  .option('--select', 'Interactive model selection and download')
   .option('--list', 'List installed models')
   .option('--pull <model>', 'Download a specific model')
   .option('--serve', 'Start Ollama server')

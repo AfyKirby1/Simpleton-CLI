@@ -4,6 +4,7 @@ import { FileManager } from '../tools/FileManager';
 import { ShellExecutor } from '../tools/ShellExecutor';
 import { DiffRenderer } from '../ui/DiffRenderer';
 import { ApprovalPrompt } from '../ui/ApprovalPrompt';
+import { ConnectionTester } from '../ui/ConnectionTester';
 import * as path from 'path';
 
 export interface AgentOptions {
@@ -21,6 +22,7 @@ export class AgentLoop {
   private shellExecutor: ShellExecutor;
   private diffRenderer: DiffRenderer;
   private approvalPrompt: ApprovalPrompt;
+  private connectionTester: ConnectionTester;
   private options: AgentOptions;
 
   constructor(config: ConfigManager, options: AgentOptions = {}) {
@@ -33,6 +35,7 @@ export class AgentLoop {
     this.shellExecutor = new ShellExecutor();
     this.diffRenderer = new DiffRenderer();
     this.approvalPrompt = new ApprovalPrompt();
+    this.connectionTester = new ConnectionTester();
   }
 
   async run(prompt: string): Promise<void> {
@@ -58,9 +61,10 @@ export class AgentLoop {
     console.log(`💭 Task: ${prompt}`);
     console.log('');
 
-    // Test LLM connection
-    if (!(await this.llmClient.testConnection())) {
-      console.error('❌ Failed to connect to LLM endpoint. Please check if Ollama is running.');
+    // Test LLM connection with loading animation and timeout handling
+    const connectionSuccess = await this.connectionTester.testConnectionWithFeedback(this.llmClient, 15000);
+    if (!connectionSuccess) {
+      this.connectionTester.close();
       process.exit(1);
     }
 

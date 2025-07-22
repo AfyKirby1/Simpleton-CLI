@@ -888,7 +888,7 @@ We follow [Semantic Versioning](https://semver.org/):
 1. **Pre-Release**
    - [ ] All tests passing
    - [ ] Documentation updated
-   - [ ] CHANGELOG.md updated
+   - [ ] docs/CHANGELOG.md updated
    - [ ] Version bumped in package.json
    - [ ] Security audit completed
 

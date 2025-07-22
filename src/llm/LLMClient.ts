@@ -221,12 +221,43 @@ export class LLMClient {
     }
   }
 
-  async testConnection(): Promise<boolean> {
+  async testConnection(timeoutMs: number = 10000): Promise<{ success: boolean; error?: string; timeout?: boolean }> {
+    const source = axios.CancelToken.source();
+    const timeout = setTimeout(() => {
+      source.cancel('Connection timed out');
+    }, timeoutMs);
+
     try {
-      const response = await this.client.get('/models', { timeout: 5000 });
-      return response.status === 200;
+      const response = await this.client.get('/models', { 
+        cancelToken: source.token 
+      });
+      clearTimeout(timeout);
+      
+      if (response.status === 200) {
+        return { success: true };
+      } else {
+        return { success: false, error: `HTTP ${response.status}: ${response.statusText}` };
+      }
     } catch (error) {
-      return false;
+      clearTimeout(timeout);
+      
+      if (axios.isCancel(error)) {
+        return { success: false, error: 'Connection timed out', timeout: true };
+      }
+      
+      if (error instanceof Error) {
+        if (error.message.includes('ECONNREFUSED')) {
+          return { success: false, error: 'Connection refused - Ollama server not running' };
+        } else if (error.message.includes('ENOTFOUND')) {
+          return { success: false, error: 'Host not found - Check endpoint URL' };
+        } else if (error.message.includes('ETIMEDOUT')) {
+          return { success: false, error: 'Connection timed out', timeout: true };
+        } else {
+          return { success: false, error: error.message };
+        }
+      }
+      
+      return { success: false, error: 'Unknown connection error' };
     }
   }
 

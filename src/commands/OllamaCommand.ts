@@ -1,6 +1,7 @@
 import { execSync, spawn } from 'child_process';
 import chalk from 'chalk';
 import { ConfigManager } from '../config/ConfigManager';
+import { ApprovalPrompt } from '../ui/ApprovalPrompt';
 
 interface OllamaModel {
   name: string;
@@ -12,6 +13,7 @@ interface OllamaModel {
 
 export class OllamaCommand {
   private config: ConfigManager;
+  private approvalPrompt: ApprovalPrompt;
   
   // Popular coding models with Mistral 7B as default
   private readonly RECOMMENDED_MODELS: OllamaModel[] = [
@@ -23,39 +25,40 @@ export class OllamaCommand {
       recommended: true
     },
     {
-      name: 'deepseek-coder:1.3b-q4_K_M',
-      description: 'DeepSeek Coder 1.3B - Fast, lightweight coding model',
-      size: '0.8GB',
-      ramRequired: '2GB+',
+      name: 'llama3.2:3b',
+      description: 'Llama 3.2 3B - Meta\'s efficient coding and reasoning model',
+      size: '2.0GB',
+      ramRequired: '4GB+',
     },
     {
-      name: 'deepseek-coder:6.7b-q4_K_M',
-      description: 'DeepSeek Coder 6.7B - High quality coding model',
-      size: '3.7GB',
+      name: 'qwen2.5-coder:7b',
+      description: 'Qwen2.5 Coder 7B - Alibaba\'s specialized coding model',
+      size: '4.1GB',
       ramRequired: '8GB+',
     },
     {
-      name: 'codellama:7b-q4_K_M',
+      name: 'codellama:7b',
       description: 'Code Llama 7B - Meta\'s specialized code model',
       size: '3.8GB',
       ramRequired: '8GB+',
     },
     {
-      name: 'codegemma:2b-q4_K_M',
-      description: 'CodeGemma 2B - Google\'s lightweight coding model',
-      size: '1.6GB',
-      ramRequired: '4GB+',
+      name: 'codegemma:7b',
+      description: 'CodeGemma 7B - Google\'s coding model based on Gemma',
+      size: '5.0GB',
+      ramRequired: '8GB+',
     },
     {
-      name: 'qwen2.5-coder:1.5b-q4_K_M',
-      description: 'Qwen2.5 Coder 1.5B - Fast and efficient coding model',
-      size: '1.0GB',
-      ramRequired: '3GB+',
+      name: 'stable-code:3b',
+      description: 'Stable Code 3B - StabilityAI\'s efficient coding model',
+      size: '1.6GB',
+      ramRequired: '4GB+',
     }
   ];
 
   constructor() {
     this.config = new ConfigManager();
+    this.approvalPrompt = new ApprovalPrompt();
   }
 
   async run(options: any): Promise<void> {
@@ -70,6 +73,8 @@ export class OllamaCommand {
         await this.listInstalledModels();
       } else if (options.available) {
         this.showAvailableModels();
+      } else if (options.select) {
+        await this.selectAndDownloadModel();
       } else if (options.pull) {
         await this.pullModel(options.pull);
       } else if (options.serve) {
@@ -280,6 +285,90 @@ export class OllamaCommand {
     console.log(chalk.cyan('  ./launch-ai-cli.bat'));
   }
 
+  private async selectAndDownloadModel(): Promise<void> {
+    console.log(chalk.blue('📦 Interactive Model Selection'));
+    console.log('─'.repeat(40));
+    console.log('');
+    console.log('Choose a model to download:');
+    console.log('');
+
+    // Display models with numbers for selection
+    this.RECOMMENDED_MODELS.forEach((model, index) => {
+      const prefix = model.recommended ? '⭐' : '  ';
+      const title = model.recommended ? chalk.yellow.bold(`${index + 1}. ${model.name}`) : chalk.cyan(`${index + 1}. ${model.name}`);
+      
+      console.log(`${prefix} ${title}`);
+      console.log(`     ${chalk.gray(model.description)}`);
+      console.log(`     ${chalk.gray('Size:')} ${model.size} | ${chalk.gray('RAM:')} ${model.ramRequired}`);
+      
+      if (model.recommended) {
+        console.log(`     ${chalk.green('✨ Recommended for most users')}`);
+      }
+      console.log('');
+    });
+
+    console.log(`  ${chalk.gray(`${this.RECOMMENDED_MODELS.length + 1}. Cancel (go back)`)}`);
+    console.log('');
+
+    try {
+      const choice = await this.approvalPrompt.askForInput(
+        `Select a model to download (1-${this.RECOMMENDED_MODELS.length + 1})`,
+        (this.RECOMMENDED_MODELS.length + 1).toString()
+      );
+
+      const choiceNum = parseInt(choice);
+      
+      if (isNaN(choiceNum) || choiceNum < 1 || choiceNum > this.RECOMMENDED_MODELS.length + 1) {
+        console.log(chalk.red('❌ Invalid choice'));
+        return;
+      }
+
+      if (choiceNum === this.RECOMMENDED_MODELS.length + 1) {
+        console.log(chalk.gray('✅ Cancelled'));
+        return;
+      }
+
+      const selectedModel = this.RECOMMENDED_MODELS[choiceNum - 1];
+      
+      // Confirm the download
+      console.log('');
+      console.log(chalk.blue(`Selected: ${selectedModel.name}`));
+      console.log(chalk.gray(`Description: ${selectedModel.description}`));
+      console.log(chalk.gray(`Size: ${selectedModel.size} | RAM Required: ${selectedModel.ramRequired}`));
+      console.log('');
+      
+      const confirm = await this.approvalPrompt.askForApproval(
+        `Download ${selectedModel.name} (${selectedModel.size})?`
+      );
+
+      if (!confirm) {
+        console.log(chalk.gray('✅ Download cancelled'));
+        return;
+      }
+
+      // Download the model
+      await this.pullModel(selectedModel.name);
+      
+      // Ask if they want to set it as default
+      console.log('');
+      const setDefault = await this.approvalPrompt.askForApproval(
+        `Set ${selectedModel.name} as the default model?`
+      );
+
+      if (setDefault) {
+        console.log(chalk.blue('⚙️  Setting as default model...'));
+        await this.config.set('model', selectedModel.name);
+        await this.config.set('endpoint', 'http://localhost:11434/v1');
+        console.log(chalk.green(`✅ ${selectedModel.name} is now your default model`));
+      }
+
+    } catch (error) {
+      console.error(chalk.red('❌ Error during model selection:'), error);
+    } finally {
+      this.approvalPrompt.close();
+    }
+  }
+
   private showHelp(): void {
     console.log(chalk.blue('🤖 Ollama Model Management'));
     console.log('');
@@ -289,6 +378,7 @@ export class OllamaCommand {
     console.log('Options:');
     console.log('  --setup              Quick setup with Mistral 7B (recommended)');
     console.log('  --available          Show available models');
+    console.log('  --select             Interactive model selection and download');
     console.log('  --list              List installed models');
     console.log('  --pull <model>      Download a specific model');
     console.log('  --serve             Start Ollama server');
@@ -296,6 +386,7 @@ export class OllamaCommand {
     console.log('Examples:');
     console.log(chalk.gray('  ai-cli ollama --setup                    # Quick setup'));
     console.log(chalk.gray('  ai-cli ollama --available               # Show available models'));
+    console.log(chalk.gray('  ai-cli ollama --select                  # Interactive model selection'));
     console.log(chalk.gray('  ai-cli ollama --pull mistral:7b         # Download Mistral 7B'));
     console.log(chalk.gray('  ai-cli ollama --list                    # List installed models'));
     console.log(chalk.gray('  ai-cli ollama --serve                   # Start Ollama server'));
